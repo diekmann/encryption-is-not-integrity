@@ -19,6 +19,32 @@ if Crypto.__version__ != '2.6.1':
     print("Warning: only tested with Crypto 2.6.1")
 
 
+MARKDOWN = True
+
+def h1(str_):
+    if MARKDOWN:
+        print("# {}\n\n".format(str_))
+    else:
+        print("= {} =\n\n".format(str_))
+
+def h2(str_):
+    if MARKDOWN:
+        print("## {}\n\n".format(str_))
+    else:
+        print("=== {} ===\n\n".format(str_))
+
+def codespan(str_):
+    if MARKDOWN:
+        print("```\n{}\n```".format(str_))
+    else:
+        print("{}".format(str_))
+
+def pythonspan(str_):
+    if MARKDOWN:
+        print("```python\n{}\n```".format(str_))
+    else:
+        print("{}".format(str_))
+
 # about the coding style in this file:
 # Most things are wrapped in functions so they are in their own isolated context and we can reuse them.
 
@@ -271,9 +297,7 @@ def abbrev(msg):
 
 
 # ============================= Start of Story=============================
-print("""= Encryption is not Integrity =
-
-""")
+h1("""Encryption is not Integrity""")
 
 
 print("""Alice and Carol are just returning from their recent crypto lecture.
@@ -296,7 +320,7 @@ She opens her python3 shell and is about to generate some DH values.
 "607 is a prime", Bob says with wikipedia open in his browser.
 Alice, hoping that Bob is joking about the size of his prime, suggests the smallest prime from RFC 3526 as an example.""")
 
-print(p_RFC3526_text)
+codespan(p_RFC3526_text)
 
 print(r"""
 Alice notes fascinated, "this prime has $\pi$ in it!"
@@ -305,15 +329,16 @@ Alice continues to think aloud, "Let me reproduce this. Does that formula actual
 "Python also has floats," Bob replies.
 Probably Bob was not joking when he suggested 607 as large prime previously.
 It seems that Bob has no idea what `large' means in cryptography.
-Meanwhile, using
->>> import decimal
-Alice has reproduced the calculation.
+Meanwhile, using""")
+pythonspan(""">>> import decimal""")
+print("""Alice has reproduced the calculation.
 By the way, the generator $g$ for said prime is conveniently $2$.
 """)
 assert check_RFC_prime()
 
 print("""A small refresher on DH follows:
-=== BEGIN SNIPPET RFC 2631 [this could be a nice floating figure]===
+""")
+codespan("""=== BEGIN SNIPPET RFC 2631 ===
 2.1.1.  Generation of ZZ
 
    [...] the shared secret ZZ is generated as follows:
@@ -331,8 +356,8 @@ print("""A small refresher on DH follows:
          xa is party a's private key
          xb is party b's private key
          p is a large prime
-=== END SNIPPET RFC 2631 ===
-""")
+=== END SNIPPET RFC 2631 ===""")
+print()
 print(r'''
 Alice takes the initiative, "Okay, I generate a secret value $\mathit(xa)$, compute $\mathit{ya} = g^\mathit{xa} \bmod p$ and send to you $\mathit{ya}, g, p$. This is also how we did it in the lecture."''')
 #For the 1536-bit (192 Byte) RFC 3526 prime, $\mathit{ya}$ will be 192 Byte.
@@ -371,16 +396,16 @@ Fortunately, Alice and Bob have 4096-bit RSA keys and securely distributed their
 print(r"""
 "Okay, what should I do?" Alice asks.
 Besides, Alice knows exactly what to do, but Bob's stackoverflow-driven approach to crypto may prove useful in the course of this story.
-Bob types into Alice's terminal
->>> import Crypto.PublicKey.RSA
+Bob types into Alice's terminal""")
+pythonspan(r""">>> import Crypto.PublicKey.RSA
 >>> def RSA_enc(k_pub, msg):
-...     return k_pub.encrypt(msg, None)[0]
-He comments, "We can ignore this None and only need the first value from the tuple. Both exist only for compatibility."
+...     return k_pub.encrypt(msg, None)[0]""")
+print(r"""He comments, "We can ignore this None and only need the first value from the tuple. Both exist only for compatibility."
 Bob is right about that.
 """)
 
 ### run 1
-print("=== Run 1: Encrypted textbook DH in one line of python ===")
+h2("Run 1: Encrypted textbook DH in one line of python")
 init_global_state(p_RFC3526, g_RFC3526)
 
 print(r"""
@@ -399,15 +424,15 @@ def alice_step1():
     ya = pow(g, xa, p)
     return RSA_enc(GLOB['pub']['k_Bob_pub'], fmt_ygp(ya, g, p))
 
-print(r"""Alice generates
->>> xa = int.from_bytes(os.urandom(192), byteorder='big')
->>> ya = pow(g, xa, p)
-and sends
->>> RSA_enc(k_Bob_pub, (ya, g, p))""")
+print(r"""Alice generates:""")
+pythonspan(r""">>> xa = int.from_bytes(os.urandom(192), byteorder='big')
+>>> ya = pow(g, xa, p)""")
+print(r"""and sends""")
+pythonspan(r""">>> RSA_enc(k_Bob_pub, (ya, g, p))""")
 thewire = alice_step1()
-print("Alice sends", abbrev(thewire))
+print(r"Alice sends", abbrev(thewire))
 
-print("""How does Alice send the message?
+print(r"""How does Alice send the message?
 She hands it over to Carol.
 "What are you doing?" Bob shouts.
 Alice tries to calm him down, "It is encrypted, those were your words. Carol will deliver the message to you."
@@ -442,14 +467,14 @@ def bob_step1(wire):
     ZZ_b = pow(ya, xb, p)
     GLOB['Bob']['key'] = ZZ_b
     return RSA_enc(GLOB['pub']['k_Alice_pub'], fmt_y(yb))
-print(r"""Bob decrypts with his private RSA key, parses ya, g, p from the message, and computes
->>> xb = int.from_bytes(os.urandom(192), byteorder='big')
+print(r"""Bob decrypts with his private RSA key, parses ya, g, p from the message, and computes""")
+pythonspan(r""">>> xb = int.from_bytes(os.urandom(192), byteorder='big')
 >>> yb = pow(g, xb, p)
->>> ZZ_b = pow(ya, xb, p)
-and sends
->>> RSA_enc(k_Alice_pub, yb)""")
+>>> ZZ_b = pow(ya, xb, p)""")
+print(r"""and sends""")
+pythonspan(r""">>> RSA_enc(k_Alice_pub, yb)""")
 thewire = bob_step1(thewire)
-print("Bob sends", abbrev(thewire))
+print(r"Bob sends", abbrev(thewire))
 
 ## Carol MitM: Bob->Carol->Alice
 def carol_mitm_bca_trivial():
@@ -480,8 +505,9 @@ Carol is right.
 How can Carol know the established keys?
 Bob is right about one thing, the DH values were encrypted, so a trivial textbook DH MitM attack does not work since Carol cannot get the ya and yb values.
 But she doesn't need to.
-This is what happened so far:
+This is what happened so far:""")
 
+codespan(r"""
    Alice                            Carol                               Bob
      |                                |                                  |
      |   RSA(k_Bob_pub, (ya, g, p))   |                                  |
@@ -495,9 +521,9 @@ This is what happened so far:
      |                                |<---------------------------------|
      |       RSA(k_Alice_pub, 1)      |
      |<-------------------------------|
-ZZ_a = pow(1, xa, p)
-
-The prime p and the generator g are public knowledge.
+ZZ_a = pow(1, xa, p)""")
+print()
+print(r"""The prime p and the generator g are public knowledge.
 Bob computes the shared DH key as $\mathit{ya}^\mathit{xb} \bmod p$, where Carol supplied $\mathit{ya}$ as $1$.
 Carol can be sure that Bob will compute a shared key of $1$, she doesn't need to know any encrypted values.
 Same goes for the exchange with Alice.
@@ -511,11 +537,10 @@ But Bob feels certain that he is right and insists, "Any library would reject th
 
 
 ### run 2, Bob uses library to prevent bad values
-print("=== Run 2: Encrypted textbook DH using OpenSSL ===")
+h2("Run 2: Encrypted textbook DH using OpenSSL")
 init_global_state(p_RFC3526, g_RFC3526)
 
-print(r"""
-"Sure, give it a try." Alice responds.
+print(r""""Sure, give it a try." Alice responds.
 She sticks to her old code because the RFC clearly states the check optional, but Bob can reject the weak values.
 """)
 
@@ -549,8 +574,8 @@ def bob_step1_lib(wire):
     GLOB['Bob']['key'] = ZZ_b
     return RSA_enc(GLOB['pub']['k_Alice_pub'], fmt_y(yb))
 
-print(r"""Bob now uses \texttt{pyca/cryptography} (and a lot of help from Alice) with the openssl backend.
->>> from cryptography.hazmat.primitives.asymmetric import dh
+print(r"""Bob now uses \texttt{pyca/cryptography} (and a lot of help from Alice) with the openssl backend.""")
+pythonspan(r""">>> from cryptography.hazmat.primitives.asymmetric import dh
 >>> from cryptography.hazmat.backends import openssl
 >>> pn = dh.DHParameterNumbers(p, g)
 >>> parameters = pn.parameters(openssl.backend)
@@ -560,8 +585,7 @@ print(r"""Bob now uses \texttt{pyca/cryptography} (and a lot of help from Alice)
 >>> assert alice_public_key.key_size == 1536
 >>> bob_public_key = bob_private_key.public_key()
 >>> yb = bob_public_key.public_numbers().y
->>> ZZ_b = bob_private_key.exchange(alice_public_key)
-""")
+>>> ZZ_b = bob_private_key.exchange(alice_public_key)""")
 thewire = bob_step1_lib(thewire)
 assert thewire == "ValueError: Public key value is invalid for this exchange."
 print("""And indeed, the last line aborts with the exception `{}'
@@ -574,7 +598,7 @@ Alice and Bob abort the handshake.
 
 
 ### run 3, Bob still uses library to prevent bad values
-print("=== Run 3: Encrypted textbook DH using OpenSSL and custom Primes ===")
+h2("Run 3: Encrypted textbook DH using OpenSSL and custom Primes")
 init_global_state(p_RFC3526, g_RFC3526)
 
 print(r"""
@@ -605,9 +629,9 @@ def carol_mitm_acb_badprime():
 thewire = carol_mitm_acb_badprime()
 print(r"""But Carol knows the math.
 She selects a random, valid $y$ value.
-And she chooses a nice prime:
->>> p = 2**1536 - 1
-Well, this isn't actually a prime.
+And she chooses a nice prime:""")
+pythonspan(r""">>> p = 2**1536 - 1""")
+print(r"""Well, this isn't actually a prime.
 Let's see if OpenSSL accepts it.
 Reliably testing for primality is expensive,""", end='')
 # Primality tests:
@@ -646,8 +670,8 @@ print("The DH key exchange is successfully completed.")
 
 # if now Bob sends something encrypted, we can bruteforce it!!!!
 ### at Bob
-print(r"""Now Bob can use the key established with DH to send an encrypted message to Alice.
->>> iv = os.urandom(16)
+print(r"""Now Bob can use the key established with DH to send an encrypted message to Alice.""")
+pythonspan(r""">>> iv = os.urandom(16)
 >>> aeskey = kdf128(ZZ_b) # squash the key to 128 bit
 >>> ct = aes128_ctr(iv, aeskey, b'Hey Alice! See, this is perfectly secure now.')
 >>> wire = "{},{}".format(hexlify(iv).decode('ascii'), hexlify(ct).decode('ascii'))""")
@@ -661,8 +685,8 @@ print("Bob sends the iv and the ciphertext message", thewire)
 
 # Carol hax0rs it
 print(r"""But Carol chose a great `prime' and knows the key is broken: Only one bit is set!
-She can just brute force all possible keys, the one that decrypts the ciphertext to printable ASCII text is most likely the correct key.
->>> iv, ct = map(unhexlify, wire.split(','))
+She can just brute force all possible keys, the one that decrypts the ciphertext to printable ASCII text is most likely the correct key.""")
+pythonspan(r""">>> iv, ct = map(unhexlify, wire.split(','))
 >>> for i in range(1536):
 ...     keyguess = 2**i
 ...     msg = aes128_ctr(iv, kdf128(keyguess.to_bytes(192, byteorder='big')), ct)
@@ -707,7 +731,7 @@ Carol interferes, "The same ideas of my attack also apply to ECDH, don't waste y
 
 
 # Run 4, we sign with plain textbook RSA
-print("=== Run 4: Textbook DH signed with textbook RSA ===")
+h2("Run 4: Textbook DH signed with textbook RSA")
 init_global_state(p_RFC3526, g_RFC3526)
 # Real-world notice: Use different RSA key pairs for signatures and encryption [RFC 8017]. But this doesn't change anything for our story.
 
@@ -715,15 +739,15 @@ print(r"""
 Alice tries to help without hurting Bob's ego, "Maybe RSA encryption does not help, but can we use RSA differently?"
 "Of course," Bob replies, "we need to sign the DH values. And signing with RSA is just encryption with the private key."
 "Don't forget the padding," Alice is trying to help, but Bob doesn't understand and just ignores Alice's comment.
-Bob immediately codes:
->>> import Crypto.PublicKey.RSA
+Bob immediately codes:""")
+pythonspan(r""">>> import Crypto.PublicKey.RSA
 >>> def RSA_sign(k_priv, msg):
 ...     # ignore the compatibility parameters
 ...     return k_priv.sign(msg, None)[0]
 >>> def RSA_verify(k_pub, msg, signature):
 ...     # ignore the compatibility parameters
-...     return k_pub.verify(msg, (signature, None))
-Again, Bob is right about ignoring the compatibility parameters.
+...     return k_pub.verify(msg, (signature, None))""")
+print(r"""Again, Bob is right about ignoring the compatibility parameters.
 However, Carol sneers as Bob additionally completely ignores Alice's comment about the padding.
 """)
 
@@ -747,8 +771,8 @@ def alice_rsasign_step1():
     ya = pow(g, xa, p)
     return "{},{}".format(ya, RSA_sign(GLOB['Alice']['k_priv'], ya))
 thewire = alice_rsasign_step1()
-print(r"""Alice only sends the following in the first step:
->>> "{},{}".format(ya, RSA_sign(k_Alice_priv, ya))""")
+print(r"""Alice only sends the following in the first step:""")
+pythonspan(r""">>> "{},{}".format(ya, RSA_sign(k_Alice_priv, ya))""")
 print("Alice sends", abbrev(thewire))
 
 
@@ -781,8 +805,8 @@ def bob_rsasign_step1(wire):
     GLOB['Bob']['key'] = ZZ_b
     return "{},{}".format(yb, RSA_sign(GLOB['Bob']['k_priv'], yb))
 thewire = bob_rsasign_step1(thewire)
-print(r"""Bob parses the values, verifies the signature correctly and performs his step of the DH exchange.
->>> ya, signature = map(int, wire.split(','))
+print(r"""Bob parses the values, verifies the signature correctly and performs his step of the DH exchange.""")
+pythonspan(r""">>> ya, signature = map(int, wire.split(','))
 >>> if not RSA_verify(k_Alice_pub, ya, signature):
 >>>     print("Signature verification failed")
 >>>     return 'reject'
@@ -815,8 +839,9 @@ print(r"""Alice smiles as she receives the values.
 Nevertheless, she performs the signature verification professionally.
 Both, the signature check at Bob and the signature check at Alice were successful and Alice and Bob agreed on a shared key.""")
 
-print(r"""This is what happened so far:
+print(r"""This is what happened so far:""")
 
+codespan(r"""
    Alice                            Carol                               Bob
      |                                |                                  |
      |   ya, RSA(k_Alice_priv, ya)    |                                  |
@@ -855,7 +880,7 @@ By the way, the RSA encryption used before without padding is also dangerous.\fo
 
 
 # Run 5, we sign with RSA PSS as pyca/cryptography calls it, or RSASSA-PSS as RFC 8017 calls it
-print("=== Run 5: Textbook DH signed with RSASSA-PSS ===")
+h2("Run 5: Textbook DH signed with RSASSA-PSS")
 init_global_state(p_RFC3526, g_RFC3526)
 
 # We no longer use pyCrypto!
@@ -872,9 +897,8 @@ def key_Crypto_to_cryptography(person):
 for person in ('Alice', 'Bob', 'Carol'):
     key_Crypto_to_cryptography(person)
 
-print(r"""
-Bob gets some help to get the sign and verify functions replaced.
->>> from cryptography.hazmat.primitives import hashes
+print(r"""Bob gets some help to get the sign and verify functions replaced.""")
+pythonspan(r""">>> from cryptography.hazmat.primitives import hashes
 >>> from cryptography.hazmat.primitives.asymmetric import padding
 >>> def RSA_sign(k_priv, msg):
 >>>     return private_key.sign(
@@ -884,8 +908,8 @@ Bob gets some help to get the sign and verify functions replaced.
 ...             salt_length=padding.PSS.MAX_LENGTH
 ...         ),
 ...         hashes.SHA256()
-...     )
-The RSA_verify function is replaced accordingly.
+...     )""")
+print(r"""The RSA_verify function is replaced accordingly.
 """)
 
 # make sure old defs are gone
@@ -977,8 +1001,8 @@ alice_rsasign_step2(thewire)
 
 assert GLOB['Alice']['key'] == GLOB['Bob']['key']
 ### at Bob
-print(r"""Finally, Alice and Bob established a shared key and Carol does not know it. Bob uses this key to send an encrypted message to Alice again.
->>> iv = os.urandom(16)
+print(r"""Finally, Alice and Bob established a shared key and Carol does not know it. Bob uses this key to send an encrypted message to Alice again.""")
+pythonspan(r""">>> iv = os.urandom(16)
 >>> aeskey = kdf128(ZZ_b) # squash the key to 128 bit
 >>> ct = aes128_ctr(iv, aeskey, b'Hey Alice! See, this is perfectly secure now.')
 >>> wire = "{},{}".format(hexlify(iv).decode('ascii'), hexlify(ct).decode('ascii')""")
