@@ -227,7 +227,7 @@ ZZ_a = pow(1, xa, p)
 ```
 
 The prime $p$, the generator $g$, and the public keys are public knowledge, also known to Carol (check your textbook, neighbor).
-Consequently, Carl can encrypt DH values, but she cannot read the ones from Alice and Bob.
+Consequently, Carol can encrypt DH values, but she cannot read the ones from Alice and Bob.
 Bob computes the shared DH key as $\mathit{ya}^\mathit{xb} \bmod p$, where Carol supplied $1$ for $\mathit{ya}$.
 Carol can be sure that Bob will compute a shared key of $1$, she doesn't need to know any encrypted values.
 Same goes for the exchange with Alice.
@@ -354,7 +354,7 @@ She can just brute force all possible keys, the one that decrypts the ciphertext
 The brute-forced key is 247330401473104534060502521019647190035131349101211839914063056092897225106531867170316401061243044989597671426016139339351365034306751209967546155101893167916606772148699136, or in hex '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' (exactly one bit set). Carol is correct.
 She immediately shouts out the message `Hey Alice! See, this is perfectly secure now.'
 Bob is depressed.
-"Why doesn't his code work?", he asks.
+"Why doesn't this code work?", he asks.
 "Probably DH is not strong enough and we need to use elliptic curve DH?", he conjectures.
 "Maybe Carol even has a quantum computer hidden in her pocket, let me find a post-quantum replacement for Diffie-Hellman, ..." he continues.
 Carol interferes, "The same ideas of my attack also apply to ECDH or a post-quantum drop-in replacement with the same properties. Don't waste your time on this line of thought. If you cannot use textbook DH, ECDH (or the post-quantum candidates) won't help."
