@@ -605,7 +605,7 @@ RSA decrypt
 ZZ_a = pow(1, xa, p)""")
 print()
 print(r"""The prime $p$, the generator $g$, and the public keys are public knowledge, also known to Carol (check your textbook, neighbor).
-Consequently, Carl can encrypt DH values, but she cannot read the ones from Alice and Bob.
+Consequently, Carol can encrypt DH values, but she cannot read the ones from Alice and Bob.
 Bob computes the shared DH key as $\mathit{ya}^\mathit{xb} \bmod p$, where Carol supplied $1$ for $\mathit{ya}$.
 Carol can be sure that Bob will compute a shared key of $1$, she doesn't need to know any encrypted values.
 Same goes for the exchange with Alice.
@@ -848,7 +848,7 @@ Carol_remembers_message = carol_bruteforce_dh_weakprime(thewire)
 # no need to forward to Alice. Alice would be unable to decrypt because the DH exchange with her is broken. But it is too late to react now.
 
 print(r"""Bob is depressed.
-"Why doesn't his code work?", he asks.
+"Why doesn't my code work?", he asks.
 "Probably DH is not strong enough and we need to use elliptic curve DH?", he conjectures.
 "Maybe Carol even has a quantum computer hidden in her pocket, let me find a post-quantum replacement for Diffie-Hellman, ..." he continues.
 Carol interferes, "The same ideas of my attack also apply to ECDH or a post-quantum drop-in replacement with the same properties. Don't waste your time on this line of thought. If you cannot use textbook DH, ECDH (or the post-quantum candidates) won't help."
