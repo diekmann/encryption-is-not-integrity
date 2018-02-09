@@ -1168,7 +1168,8 @@ print("Bob sends the iv and the ciphertext message {}.".format(thewire))
 def carol_modify_aesctr(wire):
     iv, ct = map(unhexlify, wire.split(','))
     assert len(ct) == len(Carol_remembers_message.encode('ascii'))
-    print(r"""Carol realizes that the ciphertext has exactly the same length as the message sent by Bob in run 3 when he thought he had established a key with Alice.""")
+    print(r"""Carol remembers the plaintext Bob sent in run 3.""")
+    print(r"""She realizes that this run's ciphertext has exactly the same length as the plaintext in run 3.""")
 
     # xor together the ciphertext and the old plaintext
     keystream = (a ^ b for a, b in zip(ct, Carol_remembers_message.encode('ascii')))
@@ -1177,7 +1178,7 @@ def carol_modify_aesctr(wire):
     ct = bytes(a ^ b for a, b in zip(keystream, "Encryption is not Integrity.".encode('ascii')))
     return "{},{}".format(hexlify(iv).decode('ascii'), hexlify(ct).decode('ascii'))
 thewire = carol_modify_aesctr(thewire)
-print("Carol forwards", thewire)
+print("Carol forwards a ciphertext which is slightly shorter:", thewire)
 
 
 ## Alice
