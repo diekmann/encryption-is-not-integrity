@@ -14,7 +14,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.serialization import load_pem_private_key, load_pem_public_key
 
 if cryptography.__version__ != '1.9':
-    print("Warning: only tested with cryptography 1.9. May not work on you system.")
+    print("Warning: only tested with cryptography 1.9. May not work on you system. You have {}".format(cryptography.__version__))
 if Crypto.__version__ != '2.6.1':
     print("Warning: only tested with Crypto 2.6.1")
 
