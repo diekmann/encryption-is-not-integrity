@@ -31,7 +31,7 @@ def h2(str_):
     if MARKDOWN:
         print("\n## {}\n".format(str_))
     else:
-        print("=== {} ===\n\n".format(str_))
+        print("\n=== {} ===\n\n".format(str_))
 
 def codespan(str_):
     if MARKDOWN:
